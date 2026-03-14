@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Game Giải Đố</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+text-align:center;
+margin:0;
+}
+
+.box{
+width:400px;
+}
+
+input{
+padding:10px;
+font-size:18px;
+margin-top:20px;
+width:200px;
+}
+
+button{
+padding:10px 25px;
+font-size:18px;
+margin-top:20px;
+cursor:pointer;
+border:none;
+border-radius:10px;
+background:#5a6edc;
+color:white;
+}
+
+#win{
+display:none;
+font-size:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box" id="game">
+
+<h1 id="question">2 + 2 = ?</h1>
+
+<input id="answer">
+
+<br>
+
+<button onclick="check()">Trả lời</button>
+
+</div>
+
+<div id="win">
+
+<div>❤️ Thắng rồi ❤️</div>
+<div>Tao thích mày Thiệu Gia Bảo</div>
+
+</div>
+
+<script>
+
+let questions=[
+{q:"2 + 2 = ?",a:"4"},
+{q:"5 x 3 = ?",a:"15"},
+{q:"Tâm trạng của tao là...",a:"buồn"},
+{q:"Tao thích ai?",a:"thiệu gia bảo"}
+];
+
+let index=0;
+
+function check(){
+
+let input=document.getElementById("answer").value.toLowerCase();
+
+if(input==questions[index].a){
+
+index++;
+
+if(index>=questions.length){
+
+document.getElementById("game").style.display="none";
+document.getElementById("win").style.display="block";
+
+}else{
+
+document.getElementById("question").innerText=questions[index].q;
+document.getElementById("answer").value="";
+
+}
+
+}else{
+
+alert("Sai rồi 😏");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
