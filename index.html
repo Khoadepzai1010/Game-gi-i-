@@ -2,108 +2,272 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Game Giải Đố</title>
+<title>Khám phá bí mật của HĐKhoa</title>
 
 <style>
 
 body{
-background:black;
-color:white;
 font-family:Arial;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-text-align:center;
-margin:0;
+background:linear-gradient(135deg,#6a0dad,#9b59b6);
+padding:20px;
 }
 
 .box{
-width:400px;
+background:white;
+max-width:900px;
+margin:auto;
+padding:30px;
+border-radius:20px;
 }
 
-input{
-padding:10px;
-font-size:18px;
-margin-top:20px;
-width:200px;
+.intro{
+background:#efe6ff;
+padding:25px;
+border-radius:15px;
+text-align:center;
+margin-bottom:20px;
 }
 
 button{
-padding:10px 25px;
-font-size:18px;
-margin-top:20px;
-cursor:pointer;
+padding:12px 20px;
 border:none;
 border-radius:10px;
-background:#5a6edc;
+background:#6a0dad;
 color:white;
+font-size:16px;
+cursor:pointer;
+margin:5px;
 }
 
-#win{
+.option{
+display:block;
+width:100%;
+margin:10px 0;
+}
+
+input{
+padding:20px;
+font-size:22px;
+border-radius:40px;
+border:3px solid #6a0dad;
+width:360px;
+text-align:center;
+outline:none;
+margin-top:10px;
+}
+
+#quizBox{
 display:none;
-font-size:40px;
+margin-top:20px;
+}
+
+#passBox{
+display:none;
+margin-top:10px;
+}
+
+#secretBox{
+display:none;
+background:#fff3cd;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="box" id="game">
+<div class="box">
 
-<h1 id="question">2 + 2 = ?</h1>
+<div class="intro">
 
-<input id="answer">
+<h1>🔎 Khám phá bí mật của HĐKhoa</h1>
+
+<p>Trả lời 30 câu hỏi KHTN để mở khóa bí mật.</p>
+
+<button onclick="startQuiz()">🚀 Bắt đầu</button>
+
+<button onclick="showPass()">🔑 Bỏ qua (cần mật khẩu)</button>
+
+<div id="passBox">
+
+<input type="password" id="passInput" placeholder="Nhập mật khẩu">
 
 <br>
 
-<button onclick="check()">Trả lời</button>
+<button onclick="checkPass()">Mở khóa</button>
 
 </div>
 
-<div id="win">
+</div>
 
-<div>❤️ Thắng rồi ❤️</div>
-<div>Tao thích mày Thiệu Gia Bảo</div>
+<h2 id="progress"></h2>
+
+<div id="quizBox">
+
+<h3 id="question"></h3>
+
+<button class="option" onclick="checkAnswer(0)" id="a"></button>
+<button class="option" onclick="checkAnswer(1)" id="b"></button>
+<button class="option" onclick="checkAnswer(2)" id="c"></button>
+<button class="option" onclick="checkAnswer(3)" id="d"></button>
+
+</div>
+
+<div id="secretBox">
+
+<h2>🔐 Bí mật của HĐKhoa</h2>
+
+<p><b>1️⃣ Sở thích</b></p>
+<p>HĐKhoa rất yêu thích môn <b>Tin học 💻</b> và <b>Ngữ văn 📖</b>.</p>
+
+<p><b>2️⃣ Bên ngoài</b></p>
+<p>Luôn cố gắng giữ nụ cười khi đi học 🙂</p>
+
+<p><b>3️⃣ Bên trong</b></p>
+<p>Khi về nhà đôi khi áp lực lại đè lên.</p>
+
+<p><b>4️⃣ Điểm yếu</b></p>
+
+<ul>
+<li>Bị xúc phạm danh dự</li>
+<li>Bị chê bai</li>
+<li>Bị phỉ báng</li>
+</ul>
+
+<button onclick="showLove()">❤️ Bí mật số 5</button>
+
+<div id="loveBox" style="display:none">
+
+<input type="password" id="lovePass" placeholder="Nhập mật khẩu">
+
+<br>
+
+<button onclick="checkLove()">Xem</button>
+
+<p id="loveResult"></p>
+
+</div>
+
+</div>
 
 </div>
 
 <script>
 
 let questions=[
-{q:"2 + 2 = ?",a:"4"},
-{q:"5 x 3 = ?",a:"15"},
-{q:"Tâm trạng của tao là...",a:"buồn"},
-{q:"Tao thích ai?",a:"thiệu gia bảo"}
+
+{q:"Đơn vị đo lực là gì?",options:["Newton","Pascal","Jun","Watt"],answer:0},
+{q:"Nước có công thức hóa học là gì?",options:["CO2","H2O","O2","NaCl"],answer:1},
+{q:"Trái đất nằm vị trí thứ mấy so với mặt trời?",options:["2","3","4","5"],answer:1},
+{q:"Kim loại dẫn điện tốt nhất?",options:["Sắt","Bạc","Nhôm","Đồng"],answer:1},
+{q:"Cơ quan bơm máu trong cơ thể?",options:["Phổi","Tim","Gan","Thận"],answer:1},
+{q:"Máu người có màu gì?",options:["Đỏ","Xanh","Vàng","Trắng"],answer:0},
+{q:"Cây tạo ra khí gì khi quang hợp?",options:["CO2","Oxy","Nitơ","Hidro"],answer:1},
+{q:"Nhiệt độ nước sôi?",options:["50","100","150","200"],answer:1},
+{q:"Mặt trăng quay quanh gì?",options:["Mặt trời","Trái đất","Sao hỏa","Sao mộc"],answer:1},
+{q:"Hành tinh lớn nhất hệ mặt trời?",options:["Trái đất","Sao hỏa","Sao mộc","Sao kim"],answer:2},
+{q:"1kg bằng bao nhiêu g?",options:["10","100","1000","10000"],answer:2},
+{q:"1m bằng bao nhiêu cm?",options:["10","100","1000","10000"],answer:1},
+{q:"Con người có bao nhiêu xương?",options:["106","206","306","406"],answer:1},
+{q:"Con người có bao nhiêu nhiễm sắc thể?",options:["23","46","92","44"],answer:1},
+{q:"Cây hút nước bằng bộ phận nào?",options:["Lá","Thân","Rễ","Hoa"],answer:2},
+{q:"Khí chiếm nhiều nhất trong không khí?",options:["Oxy","Nitơ","CO2","Hidro"],answer:1},
+{q:"Trái đất quay quanh trục bao lâu?",options:["12 giờ","24 giờ","48 giờ","72 giờ"],answer:1},
+{q:"Ánh sáng truyền nhanh nhất trong môi trường nào?",options:["Nước","Không khí","Chân không","Đất"],answer:2},
+{q:"Âm thanh truyền nhanh nhất trong môi trường nào?",options:["Khí","Lỏng","Rắn","Chân không"],answer:2},
+{q:"Kim loại nhẹ nhất?",options:["Sắt","Liti","Nhôm","Đồng"],answer:1},
+{q:"Khí gây hiệu ứng nhà kính?",options:["O2","CO2","H2","N2"],answer:1},
+{q:"Thiên hà chứa hệ mặt trời?",options:["Andromeda","Dải ngân hà","Sombrero","Whirlpool"],answer:1},
+{q:"Hành tinh gần mặt trời nhất?",options:["Sao kim","Sao thủy","Trái đất","Sao hỏa"],answer:1},
+{q:"Nhiệt độ cơ thể người?",options:["35","36","37","38"],answer:2},
+{q:"Động vật sống dưới nước thở bằng gì?",options:["Mang","Phổi","Da","Miệng"],answer:0},
+{q:"Bộ phận quang hợp của cây?",options:["Rễ","Lá","Thân","Hoa"],answer:1},
+{q:"Chất cần cho sự cháy?",options:["CO2","Oxy","Nitơ","Hidro"],answer:1},
+{q:"Máu lưu thông trong hệ gì?",options:["Hô hấp","Tiêu hóa","Tuần hoàn","Bài tiết"],answer:2},
+{q:"Hành tinh đỏ là?",options:["Sao kim","Sao hỏa","Sao mộc","Sao thổ"],answer:1},
+{q:"Ngôi sao gần trái đất nhất?",options:["Sirius","Mặt trời","Polaris","Vega"],answer:1}
+
 ];
 
-let index=0;
+let current=0;
 
-function check(){
+function startQuiz(){
+document.getElementById("quizBox").style.display="block";
+showQuestion();
+}
 
-let input=document.getElementById("answer").value.toLowerCase();
+function showQuestion(){
 
-if(input==questions[index].a){
+let q=questions[current];
 
-index++;
+document.getElementById("question").innerText=q.q;
+document.getElementById("progress").innerText="Câu "+(current+1)+"/30";
 
-if(index>=questions.length){
-
-document.getElementById("game").style.display="none";
-document.getElementById("win").style.display="block";
-
-}else{
-
-document.getElementById("question").innerText=questions[index].q;
-document.getElementById("answer").value="";
+document.getElementById("a").innerText="A. "+q.options[0];
+document.getElementById("b").innerText="B. "+q.options[1];
+document.getElementById("c").innerText="C. "+q.options[2];
+document.getElementById("d").innerText="D. "+q.options[3];
 
 }
 
+function checkAnswer(choice){
+
+if(choice===questions[current].answer){
+current++;
+}
+
+if(current>=questions.length){
+
+document.getElementById("quizBox").style.display="none";
+document.getElementById("secretBox").style.display="block";
+
 }else{
 
-alert("Sai rồi 😏");
+showQuestion();
+
+}
+
+}
+
+function showPass(){
+document.getElementById("passBox").style.display="block";
+}
+
+function checkPass(){
+
+let pass=document.getElementById("passInput").value;
+
+if(pass==="AOV_DHjm"){
+
+document.getElementById("quizBox").style.display="none";
+document.getElementById("secretBox").style.display="block";
+
+}else{
+
+alert("Sai mật khẩu!");
+
+}
+
+}
+
+function showLove(){
+document.getElementById("loveBox").style.display="block";
+}
+
+function checkLove(){
+
+let pass=document.getElementById("lovePass").value;
+
+if(pass==="HKhoa0603"){
+
+document.getElementById("loveResult").innerHTML="❤️ Huỳnh Đăng Khoa đang thích thầm Thiệu Gia Bảo.";
+
+}else{
+
+alert("Sai mật khẩu!");
 
 }
 
