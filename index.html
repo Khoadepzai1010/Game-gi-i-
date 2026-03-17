@@ -2,10 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Khám phá bí mật của HĐKhoa</title>
+<title>Bí mật của HĐKhoa</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:linear-gradient(135deg,#6a0dad,#9b59b6);
@@ -20,60 +19,37 @@ padding:30px;
 border-radius:20px;
 }
 
-.intro{
-background:#efe6ff;
-padding:25px;
-border-radius:15px;
-text-align:center;
-margin-bottom:20px;
-}
-
 button{
-padding:12px 20px;
+padding:15px;
 border:none;
-border-radius:10px;
+border-radius:15px;
 background:#6a0dad;
 color:white;
-font-size:16px;
-cursor:pointer;
 margin:5px;
+width:90%;
+font-size:18px;
+cursor:pointer;
 }
 
 .option{
-display:block;
-width:100%;
-margin:10px 0;
+background:#eee;
+color:black;
+}
+.option:hover{
+background:#d9c6ff;
 }
 
 input{
 padding:20px;
-font-size:22px;
 border-radius:40px;
-border:3px solid #6a0dad;
-width:360px;
+width:320px;
+font-size:20px;
 text-align:center;
-outline:none;
-margin-top:10px;
 }
 
-#quizBox{
+#quizBox,#secretBox,#passBox,#loveBox,#hack{
 display:none;
-margin-top:20px;
 }
-
-#passBox{
-display:none;
-margin-top:10px;
-}
-
-#secretBox{
-display:none;
-background:#fff3cd;
-padding:20px;
-border-radius:15px;
-margin-top:20px;
-}
-
 </style>
 </head>
 
@@ -81,74 +57,64 @@ margin-top:20px;
 
 <div class="box">
 
-<div class="intro">
-
-<h1>🔎 Khám phá bí mật của HĐKhoa</h1>
-
-<p>Trả lời 30 câu hỏi KHTN để mở khóa bí mật.</p>
+<h1>🔒 Bí mật của HĐKhoa</h1>
 
 <button onclick="startQuiz()">🚀 Bắt đầu</button>
+<button onclick="showPass()">🔑 Bỏ qua</button>
 
-<button onclick="showPass()">🔑 Bỏ qua (cần mật khẩu)</button>
-
+<!-- PASS -->
 <div id="passBox">
-
 <input type="password" id="passInput" placeholder="Nhập mật khẩu">
-
 <br>
-
 <button onclick="checkPass()">Mở khóa</button>
-
 </div>
 
-</div>
+<h3 id="progress"></h3>
 
-<h2 id="progress"></h2>
-
+<!-- QUIZ -->
 <div id="quizBox">
+<h2 id="q"></h2>
 
-<h3 id="question"></h3>
-
-<button class="option" onclick="checkAnswer(0)" id="a"></button>
-<button class="option" onclick="checkAnswer(1)" id="b"></button>
-<button class="option" onclick="checkAnswer(2)" id="c"></button>
-<button class="option" onclick="checkAnswer(3)" id="d"></button>
-
+<button class="option" onclick="ans(0)" id="a"></button>
+<button class="option" onclick="ans(1)" id="b"></button>
+<button class="option" onclick="ans(2)" id="c"></button>
+<button class="option" onclick="ans(3)" id="d"></button>
 </div>
 
+<!-- HACK -->
+<div id="hack">
+<h2>💻 Đang truy cập hệ thống...</h2>
+<p id="load"></p>
+</div>
+
+<!-- SECRET -->
 <div id="secretBox">
 
-<h2>🔐 Bí mật của HĐKhoa</h2>
+<h2>🔓 Bí mật của HĐKhoa</h2>
 
-<p><b>1️⃣ Sở thích</b></p>
-<p>HĐKhoa rất yêu thích môn <b>Tin học 💻</b> và <b>Ngữ văn 📖</b>.</p>
+<h3>1️⃣ Sở thích</h3>
+<p>HĐKhoa rất yêu thích môn Tin học 💻 và Ngữ văn 📖.</p>
 
-<p><b>2️⃣ Bên ngoài</b></p>
+<h3>2️⃣ Bên ngoài</h3>
 <p>Luôn cố gắng giữ nụ cười khi đi học 🙂</p>
 
-<p><b>3️⃣ Bên trong</b></p>
+<h3>3️⃣ Bên trong</h3>
 <p>Khi về nhà đôi khi áp lực lại đè lên.</p>
 
-<p><b>4️⃣ Điểm yếu</b></p>
-
+<h3>4️⃣ Điểm yếu</h3>
 <ul>
 <li>Bị xúc phạm danh dự</li>
 <li>Bị chê bai</li>
 <li>Bị phỉ báng</li>
 </ul>
 
-<button onclick="showLove()">❤️ Bí mật số 5</button>
+<button onclick="showLove()">❤️ Bí mật cuối</button>
 
-<div id="loveBox" style="display:none">
-
+<div id="loveBox">
 <input type="password" id="lovePass" placeholder="Nhập mật khẩu">
-
 <br>
-
 <button onclick="checkLove()">Xem</button>
-
 <p id="loveResult"></p>
-
 </div>
 
 </div>
@@ -157,120 +123,145 @@ margin-top:20px;
 
 <script>
 
+// ===== ANTI F12 =====
+document.onkeydown=function(e){
+if(e.keyCode==123){
+alert("🚫 Đừng soi code 😆");
+return false;
+}
+}
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+// ===== 30 CÂU =====
 let questions=[
-
-{q:"Đơn vị đo lực là gì?",options:["Newton","Pascal","Jun","Watt"],answer:0},
-{q:"Nước có công thức hóa học là gì?",options:["CO2","H2O","O2","NaCl"],answer:1},
-{q:"Trái đất nằm vị trí thứ mấy so với mặt trời?",options:["2","3","4","5"],answer:1},
-{q:"Kim loại dẫn điện tốt nhất?",options:["Sắt","Bạc","Nhôm","Đồng"],answer:1},
-{q:"Cơ quan bơm máu trong cơ thể?",options:["Phổi","Tim","Gan","Thận"],answer:1},
-{q:"Máu người có màu gì?",options:["Đỏ","Xanh","Vàng","Trắng"],answer:0},
-{q:"Cây tạo ra khí gì khi quang hợp?",options:["CO2","Oxy","Nitơ","Hidro"],answer:1},
-{q:"Nhiệt độ nước sôi?",options:["50","100","150","200"],answer:1},
-{q:"Mặt trăng quay quanh gì?",options:["Mặt trời","Trái đất","Sao hỏa","Sao mộc"],answer:1},
-{q:"Hành tinh lớn nhất hệ mặt trời?",options:["Trái đất","Sao hỏa","Sao mộc","Sao kim"],answer:2},
-{q:"1kg bằng bao nhiêu g?",options:["10","100","1000","10000"],answer:2},
-{q:"1m bằng bao nhiêu cm?",options:["10","100","1000","10000"],answer:1},
-{q:"Con người có bao nhiêu xương?",options:["106","206","306","406"],answer:1},
-{q:"Con người có bao nhiêu nhiễm sắc thể?",options:["23","46","92","44"],answer:1},
-{q:"Cây hút nước bằng bộ phận nào?",options:["Lá","Thân","Rễ","Hoa"],answer:2},
-{q:"Khí chiếm nhiều nhất trong không khí?",options:["Oxy","Nitơ","CO2","Hidro"],answer:1},
-{q:"Trái đất quay quanh trục bao lâu?",options:["12 giờ","24 giờ","48 giờ","72 giờ"],answer:1},
-{q:"Ánh sáng truyền nhanh nhất trong môi trường nào?",options:["Nước","Không khí","Chân không","Đất"],answer:2},
-{q:"Âm thanh truyền nhanh nhất trong môi trường nào?",options:["Khí","Lỏng","Rắn","Chân không"],answer:2},
-{q:"Kim loại nhẹ nhất?",options:["Sắt","Liti","Nhôm","Đồng"],answer:1},
-{q:"Khí gây hiệu ứng nhà kính?",options:["O2","CO2","H2","N2"],answer:1},
-{q:"Thiên hà chứa hệ mặt trời?",options:["Andromeda","Dải ngân hà","Sombrero","Whirlpool"],answer:1},
-{q:"Hành tinh gần mặt trời nhất?",options:["Sao kim","Sao thủy","Trái đất","Sao hỏa"],answer:1},
-{q:"Nhiệt độ cơ thể người?",options:["35","36","37","38"],answer:2},
-{q:"Động vật sống dưới nước thở bằng gì?",options:["Mang","Phổi","Da","Miệng"],answer:0},
-{q:"Bộ phận quang hợp của cây?",options:["Rễ","Lá","Thân","Hoa"],answer:1},
-{q:"Chất cần cho sự cháy?",options:["CO2","Oxy","Nitơ","Hidro"],answer:1},
-{q:"Máu lưu thông trong hệ gì?",options:["Hô hấp","Tiêu hóa","Tuần hoàn","Bài tiết"],answer:2},
-{q:"Hành tinh đỏ là?",options:["Sao kim","Sao hỏa","Sao mộc","Sao thổ"],answer:1},
-{q:"Ngôi sao gần trái đất nhất?",options:["Sirius","Mặt trời","Polaris","Vega"],answer:1}
-
+["Đơn vị đo lực là gì?",["Newton","Pascal","Jun","Watt"],0],
+["Nước có công thức hóa học là gì?",["CO2","H2O","O2","NaCl"],1],
+["Trái Đất đứng thứ mấy trong hệ Mặt Trời?",["2","3","4","5"],1],
+["Kim loại dẫn điện tốt nhất?",["Sắt","Bạc","Nhôm","Đồng"],1],
+["Tim có chức năng gì?",["Thở","Bơm máu","Ăn","Lọc"],1],
+["Máu của con người có màu gì?",["Đỏ","Xanh","Vàng","Trắng"],0],
+["Cây xanh tạo ra khí gì?",["CO2","Oxy","Nitơ","Hidro"],1],
+["Nước sôi ở bao nhiêu độ C?",["50","100","150","200"],1],
+["Mặt Trăng quay quanh hành tinh nào?",["Mặt Trời","Trái Đất","Sao Hỏa","Sao Mộc"],1],
+["Hành tinh lớn nhất hệ Mặt Trời?",["Trái Đất","Sao Hỏa","Sao Mộc","Sao Kim"],2],
+["1 kg bằng bao nhiêu gam?",["10","100","1000","10000"],2],
+["1 mét bằng bao nhiêu cm?",["10","100","1000","10000"],1],
+["Cơ thể người có bao nhiêu xương?",["106","206","306","406"],1],
+["Số lượng nhiễm sắc thể ở người là bao nhiêu?",["23","46","92","44"],1],
+["Cây hút nước bằng bộ phận nào?",["Lá","Thân","Rễ","Hoa"],2],
+["Khí nào nhiều nhất trong không khí?",["Oxy","Nitơ","CO2","Hidro"],1],
+["Trái Đất quay quanh trục mất bao lâu?",["12 giờ","24 giờ","48 giờ","72 giờ"],1],
+["Ánh sáng truyền nhanh nhất trong môi trường nào?",["Nước","Không khí","Chân không","Đất"],2],
+["Âm thanh truyền nhanh nhất trong môi trường nào?",["Khí","Lỏng","Rắn","Không"],2],
+["Kim loại nhẹ nhất là gì?",["Sắt","Liti","Nhôm","Đồng"],1],
+["Hiệu ứng nhà kính chủ yếu do khí nào?",["Oxy","CO2","Hidro","Nitơ"],1],
+["Thiên hà chứa Trái Đất là gì?",["Andromeda","Ngân Hà","Khác","Không"],1],
+["Hành tinh gần Mặt Trời nhất?",["Kim","Thủy","Đất","Hỏa"],1],
+["Nhiệt độ trung bình cơ thể người?",["35°C","36°C","37°C","38°C"],2],
+["Cá hô hấp bằng gì?",["Mang","Phổi","Da","Miệng"],0],
+["Quang hợp diễn ra chủ yếu ở đâu?",["Rễ","Lá","Thân","Hoa"],1],
+["Sự cháy cần khí gì?",["CO2","Oxy","Nitơ","Hidro"],1],
+["Máu thuộc hệ cơ quan nào?",["Hô hấp","Tiêu hóa","Tuần hoàn","Khác"],2],
+["Hành tinh đỏ là hành tinh nào?",["Kim","Hỏa","Mộc","Thổ"],1],
+["Ngôi sao gần Trái Đất nhất?",["Sirius","Mặt Trời","Polaris","Vega"],1]
 ];
 
-let current=0;
+let i=0,score=0;
 
+// ===== QUIZ =====
 function startQuiz(){
 document.getElementById("quizBox").style.display="block";
-showQuestion();
+show();
 }
 
-function showQuestion(){
+function show(){
+let x=questions[i];
 
-let q=questions[current];
+document.getElementById("progress").innerText="Câu "+(i+1)+"/30";
+document.getElementById("q").innerText=x[0];
 
-document.getElementById("question").innerText=q.q;
-document.getElementById("progress").innerText="Câu "+(current+1)+"/30";
-
-document.getElementById("a").innerText="A. "+q.options[0];
-document.getElementById("b").innerText="B. "+q.options[1];
-document.getElementById("c").innerText="C. "+q.options[2];
-document.getElementById("d").innerText="D. "+q.options[3];
-
+document.getElementById("a").innerText="A. "+x[1][0];
+document.getElementById("b").innerText="B. "+x[1][1];
+document.getElementById("c").innerText="C. "+x[1][2];
+document.getElementById("d").innerText="D. "+x[1][3];
 }
 
-function checkAnswer(choice){
+function ans(choice){
+if(choice===questions[i][2]) score++;
+else alert("💔 Sai 😆");
 
-if(choice===questions[current].answer){
-current++;
+i++;
+if(i>=30) end();
+else show();
 }
 
-if(current>=questions.length){
-
+function end(){
 document.getElementById("quizBox").style.display="none";
-document.getElementById("secretBox").style.display="block";
 
+if(score>=20){
+hack();
 }else{
-
-showQuestion();
-
+alert("❌ Bạn đúng "+score+"/30");
+}
 }
 
+// ===== HACK =====
+function hack(){
+document.getElementById("hack").style.display="block";
+document.getElementById("load").innerText="";
+
+let text="ACCESS GRANTED...";
+let i=0;
+
+let x=setInterval(()=>{
+document.getElementById("load").innerText+=text[i]||"";
+i++;
+
+if(i>text.length){
+clearInterval(x);
+document.getElementById("hack").style.display="none";
+document.getElementById("secretBox").style.display="block";
+}
+},50);
 }
 
+// ===== PASS 1 =====
 function showPass(){
 document.getElementById("passBox").style.display="block";
 }
 
+let pass1="QU9WX0RIam0=";
+
 function checkPass(){
+let input=document.getElementById("passInput").value.trim();
+let p=btoa(input);
 
-let pass=document.getElementById("passInput").value;
-
-if(pass==="AOV_DHjm"){
-
-document.getElementById("quizBox").style.display="none";
-document.getElementById("secretBox").style.display="block";
-
+if(p===pass1){
+document.getElementById("passBox").style.display="none";
+hack();
 }else{
-
-alert("Sai mật khẩu!");
-
+alert("Sai 😆");
+}
 }
 
-}
-
+// ===== PASS 2 =====
 function showLove(){
 document.getElementById("loveBox").style.display="block";
 }
 
+let pass2="SEtob2EwNjAz";
+let secretMsg=btoa(unescape(encodeURIComponent("💖 Huỳnh Đăng Khoa đang thích thầm Thiệu Gia Bảo")));
+
 function checkLove(){
+let input=document.getElementById("lovePass").value;
+let p=btoa(input);
 
-let pass=document.getElementById("lovePass").value;
-
-if(pass==="HKhoa0603"){
-
-document.getElementById("loveResult").innerHTML="❤️ Huỳnh Đăng Khoa đang thích thầm Thiệu Gia Bảo.";
-
+if(p===pass2){
+document.getElementById("loveResult").innerHTML=
+decodeURIComponent(escape(atob(secretMsg)));
 }else{
-
-alert("Sai mật khẩu!");
-
+alert("Sai 😆");
 }
-
 }
 
 </script>
