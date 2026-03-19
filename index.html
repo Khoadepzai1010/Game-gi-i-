@@ -7,7 +7,7 @@
 <style>
 body{
 font-family:Arial;
-background:linear-gradient(135deg,#0d77cf,#47a6d6);
+background:linear-gradient(135deg,#2196f3,#00bcd4);
 padding:20px;
 }
 
@@ -17,26 +17,33 @@ max-width:900px;
 margin:auto;
 padding:30px;
 border-radius:20px;
+box-shadow:0 0 15px rgba(10, 81, 131, 0.2);
 }
 
 button{
 padding:15px;
 border:none;
 border-radius:15px;
-background:#2157d4;
+background:#2196f3;
 color:white;
 margin:5px;
 width:90%;
 font-size:18px;
 cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#1e75cc;
 }
 
 .option{
-background:#eee;
+background:#56a7e1;
 color:black;
 }
+
 .option:hover{
-background:#8ab7f1;
+background:#558ebd;
 }
 
 input{
@@ -45,6 +52,12 @@ border-radius:40px;
 width:320px;
 font-size:20px;
 text-align:center;
+border:2px solid #2196f3;
+outline:none;
+}
+
+input:focus{
+border-color:#1976d2;
 }
 
 #quizBox,#secretBox,#passBox,#loveBox,#hack{
@@ -62,7 +75,6 @@ display:none;
 <button onclick="startQuiz()">🚀 Bắt đầu</button>
 <button onclick="showPass()">🔑 Bỏ qua</button>
 
-<!-- PASS -->
 <div id="passBox">
 <input type="password" id="passInput" placeholder="Nhập mật khẩu">
 <br>
@@ -71,7 +83,6 @@ display:none;
 
 <h3 id="progress"></h3>
 
-<!-- QUIZ -->
 <div id="quizBox">
 <h2 id="q"></h2>
 
@@ -81,13 +92,11 @@ display:none;
 <button class="option" onclick="ans(3)" id="d"></button>
 </div>
 
-<!-- HACK -->
 <div id="hack">
 <h2>💻 Đang truy cập hệ thống...</h2>
 <p id="load"></p>
 </div>
 
-<!-- SECRET -->
 <div id="secretBox">
 
 <h2>🔓 Bí mật của HĐKhoa</h2>
