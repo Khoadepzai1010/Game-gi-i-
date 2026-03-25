@@ -1,279 +1,96 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Bí mật của HĐKhoa</title>
-
-<style>
-body{
-font-family:Arial;
-background:linear-gradient(135deg,#2196f3,#00bcd4);
-padding:20px;
-}
-
-.box{
-background:white;
-max-width:900px;
-margin:auto;
-padding:30px;
-border-radius:20px;
-box-shadow:0 0 15px rgba(10, 81, 131, 0.2);
-}
-
-button{
-padding:15px;
-border:none;
-border-radius:15px;
-background:#2196f3;
-color:white;
-margin:5px;
-width:90%;
-font-size:18px;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#1e75cc;
-}
-
-.option{
-background:#56a7e1;
-color:black;
-}
-
-.option:hover{
-background:#558ebd;
-}
-
-input{
-padding:20px;
-border-radius:40px;
-width:320px;
-font-size:20px;
-text-align:center;
-border:2px solid #2196f3;
-outline:none;
-}
-
-input:focus{
-border-color:#1976d2;
-}
-
-#quizBox,#secretBox,#passBox,#loveBox,#hack{
-display:none;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý học sinh lớp 6A3</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+  <main class="container">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Năm học 2025-2026</p>
+        <h1>Quản lý danh sách học sinh lớp 6A3</h1>
+        <p class="subtitle">
+          Theo dõi toàn bộ học sinh, tìm kiếm nhanh và tách riêng nhóm học sinh
+          <strong>không học tối</strong>.
+        </p>
+      </div>
 
-<div class="box">
+      <div class="hero-card">
+        <p>Tổng học sinh</p>
+        <strong id="totalStudents">0</strong>
+        <span id="noEveningCount">0 học sinh không học tối</span>
+      </div>
+    </header>
 
-<h1>🔒 Bí mật của HĐKhoa</h1>
+    <section class="controls card">
+      <div class="search-box">
+        <label for="searchInput">Tìm theo họ tên hoặc tên</label>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Ví dụ: Khoa, Nguyễn, Phúc..."
+        />
+      </div>
 
-<button onclick="startQuiz()">🚀 Bắt đầu</button>
-<button onclick="showPass()">🔑 Bỏ qua</button>
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">
+          Tất cả học sinh
+        </button>
+        <!-- FIX ở đây -->
+        <button class="filter-btn" data-filter="no-evening">
+          Không học tối
+        </button>
+      </div>
+    </section>
 
-<div id="passBox">
-<input type="password" id="passInput" placeholder="Nhập mật khẩu">
-<br>
-<button onclick="checkPass()">Mở khóa</button>
-</div>
+    <section class="stats-grid">
+      <article class="card stat-item">
+        <span>Nữ</span>
+        <strong id="femaleCount">0</strong>
+      </article>
 
-<h3 id="progress"></h3>
+      <article class="card stat-item">
+        <span>Nam</span>
+        <strong id="maleCount">0</strong>
+      </article>
 
-<div id="quizBox">
-<h2 id="q"></h2>
+      <article class="card stat-item accent">
+        <span>Danh sách đang xem</span>
+        <strong id="visibleCount">0</strong>
+      </article>
+    </section>
 
-<button class="option" onclick="ans(0)" id="a"></button>
-<button class="option" onclick="ans(1)" id="b"></button>
-<button class="option" onclick="ans(2)" id="c"></button>
-<button class="option" onclick="ans(3)" id="d"></button>
-</div>
+    <section class="card table-section">
+      <div class="table-header">
+        <h2 id="tableTitle">Tất cả học sinh</h2>
+        <p id="tableDescription">
+          Danh sách đầy đủ 45 học sinh của lớp 6A3.
+        </p>
+      </div>
 
-<div id="hack">
-<h2>💻 Đang truy cập hệ thống...</h2>
-<p id="load"></p>
-</div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Họ và tên</th>
+              <th>Tên</th>
+              <th>Ngày sinh</th>
+              <th>Giới tính</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
-<div id="secretBox">
-
-<h2>🔓 Bí mật của HĐKhoa</h2>
-
-<h3>1️⃣ Sở thích</h3>
-<p>HĐKhoa rất yêu thích môn Tin học 💻 và Ngữ văn 📖.</p>
-
-<h3>2️⃣ Bên ngoài</h3>
-<p>Luôn cố gắng giữ nụ cười khi đi học 🙂</p>
-
-<h3>3️⃣ Bên trong</h3>
-<p>Khi về nhà đôi khi áp lực lại đè lên.</p>
-
-<h3>4️⃣ Điểm yếu</h3>
-<ul>
-<li>Bị xúc phạm danh dự</li>
-<li>Bị chê bai</li>
-<li>Bị phỉ báng</li>
-</ul>
-
-<button onclick="showLove()">❤️ Bí mật cuối</button>
-
-<div id="loveBox">
-<input type="password" id="lovePass" placeholder="Nhập mật khẩu">
-<br>
-<button onclick="checkLove()">Xem</button>
-<p id="loveResult"></p>
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-// ===== ANTI F12 =====
-document.onkeydown=function(e){
-if(e.keyCode==123){
-alert("🚫 Đừng soi code 😆");
-return false;
-}
-}
-document.addEventListener("contextmenu", e => e.preventDefault());
-
-// ===== 30 CÂU =====
-let questions=[
-["Đơn vị đo lực là gì?",["Newton","Pascal","Jun","Watt"],0],
-["Nước có công thức hóa học là gì?",["CO2","H2O","O2","NaCl"],1],
-["Trái Đất đứng thứ mấy trong hệ Mặt Trời?",["2","3","4","5"],1],
-["Kim loại dẫn điện tốt nhất?",["Sắt","Bạc","Nhôm","Đồng"],1],
-["Tim có chức năng gì?",["Thở","Bơm máu","Ăn","Lọc"],1],
-["Máu của con người có màu gì?",["Đỏ","Xanh","Vàng","Trắng"],0],
-["Cây xanh tạo ra khí gì?",["CO2","Oxy","Nitơ","Hidro"],1],
-["Nước sôi ở bao nhiêu độ C?",["50","100","150","200"],1],
-["Mặt Trăng quay quanh hành tinh nào?",["Mặt Trời","Trái Đất","Sao Hỏa","Sao Mộc"],1],
-["Hành tinh lớn nhất hệ Mặt Trời?",["Trái Đất","Sao Hỏa","Sao Mộc","Sao Kim"],2],
-["1 kg bằng bao nhiêu gam?",["10","100","1000","10000"],2],
-["1 mét bằng bao nhiêu cm?",["10","100","1000","10000"],1],
-["Cơ thể người có bao nhiêu xương?",["106","206","306","406"],1],
-["Số lượng nhiễm sắc thể ở người là bao nhiêu?",["23","46","92","44"],1],
-["Cây hút nước bằng bộ phận nào?",["Lá","Thân","Rễ","Hoa"],2],
-["Khí nào nhiều nhất trong không khí?",["Oxy","Nitơ","CO2","Hidro"],1],
-["Trái Đất quay quanh trục mất bao lâu?",["12 giờ","24 giờ","48 giờ","72 giờ"],1],
-["Ánh sáng truyền nhanh nhất trong môi trường nào?",["Nước","Không khí","Chân không","Đất"],2],
-["Âm thanh truyền nhanh nhất trong môi trường nào?",["Khí","Lỏng","Rắn","Không"],2],
-["Kim loại nhẹ nhất là gì?",["Sắt","Liti","Nhôm","Đồng"],1],
-["Hiệu ứng nhà kính chủ yếu do khí nào?",["Oxy","CO2","Hidro","Nitơ"],1],
-["Thiên hà chứa Trái Đất là gì?",["Andromeda","Ngân Hà","Khác","Không"],1],
-["Hành tinh gần Mặt Trời nhất?",["Kim","Thủy","Đất","Hỏa"],1],
-["Nhiệt độ trung bình cơ thể người?",["35°C","36°C","37°C","38°C"],2],
-["Cá hô hấp bằng gì?",["Mang","Phổi","Da","Miệng"],0],
-["Quang hợp diễn ra chủ yếu ở đâu?",["Rễ","Lá","Thân","Hoa"],1],
-["Sự cháy cần khí gì?",["CO2","Oxy","Nitơ","Hidro"],1],
-["Máu thuộc hệ cơ quan nào?",["Hô hấp","Tiêu hóa","Tuần hoàn","Khác"],2],
-["Hành tinh đỏ là hành tinh nào?",["Kim","Hỏa","Mộc","Thổ"],1],
-["Ngôi sao gần Trái Đất nhất?",["Sirius","Mặt Trời","Polaris","Vega"],1]
-];
-
-let i=0,score=0;
-
-// ===== QUIZ =====
-function startQuiz(){
-document.getElementById("quizBox").style.display="block";
-show();
-}
-
-function show(){
-let x=questions[i];
-
-document.getElementById("progress").innerText="Câu "+(i+1)+"/30";
-document.getElementById("q").innerText=x[0];
-
-document.getElementById("a").innerText="A. "+x[1][0];
-document.getElementById("b").innerText="B. "+x[1][1];
-document.getElementById("c").innerText="C. "+x[1][2];
-document.getElementById("d").innerText="D. "+x[1][3];
-}
-
-function ans(choice){
-if(choice===questions[i][2]) score++;
-else alert("💔 Sai 😆");
-
-i++;
-if(i>=30) end();
-else show();
-}
-
-function end(){
-document.getElementById("quizBox").style.display="none";
-
-if(score>=20){
-hack();
-}else{
-alert("❌ Bạn đúng "+score+"/30");
-}
-}
-
-// ===== HACK =====
-function hack(){
-document.getElementById("hack").style.display="block";
-document.getElementById("load").innerText="";
-
-let text="ACCESS GRANTED...";
-let i=0;
-
-let x=setInterval(()=>{
-document.getElementById("load").innerText+=text[i]||"";
-i++;
-
-if(i>text.length){
-clearInterval(x);
-document.getElementById("hack").style.display="none";
-document.getElementById("secretBox").style.display="block";
-}
-},50);
-}
-
-// ===== PASS 1 =====
-function showPass(){
-document.getElementById("passBox").style.display="block";
-}
-
-let pass1="QU9WX0RIam0=";
-
-function checkPass(){
-let input=document.getElementById("passInput").value.trim();
-let p=btoa(input);
-
-if(p===pass1){
-document.getElementById("passBox").style.display="none";
-hack();
-}else{
-alert("Sai 😆");
-}
-}
-
-// ===== PASS 2 =====
-function showLove(){
-document.getElementById("loveBox").style.display="block";
-}
-
-let pass2="SEtob2EwNjAz";
-let secretMsg=btoa(unescape(encodeURIComponent("💖 Huỳnh Đăng Khoa đang thích thầm Thiệu Gia Bảo")));
-
-function checkLove(){
-let input=document.getElementById("lovePass").value;
-let p=btoa(input);
-
-if(p===pass2){
-document.getElementById("loveResult").innerHTML=
-decodeURIComponent(escape(atob(secretMsg)));
-}else{
-alert("Sai 😆");
-}
-}
-
-</script>
-
+  <!-- FIX QUAN TRỌNG -->
+  <script src="script.js" defer></script>
 </body>
 </html>
